@@ -19,27 +19,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
-import it.jaschke.alexandria.services.DownloadImage;
 
 
 public class AddBookFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
+
+    // ---------------------------------
+    // CONSTANTS
+    // ---------------------------------
     private EditText ean;
     private final int LOADER_ID = 1;
     private View rootView;
     private final String EAN_CONTENT = "eanContent";
-    private static final String SCAN_FORMAT = "scanFormat";
-    private static final String SCAN_CONTENTS = "scanContents";
 
-    private String mScanFormat = "Format:";
-    private String mScanContents = "Contents:";
-
+    // ---------------------------------
+    // CONSTRUCTOR
+    // ---------------------------------
     public AddBookFragment() {
     }
 
+    // ---------------------------------
+    // OVERRIDDEN METHODS
+    // ---------------------------------
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -130,10 +135,6 @@ public class AddBookFragment extends Fragment implements LoaderManager.LoaderCal
         return rootView;
     }
 
-    private void restartLoader() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-    }
-
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (ean.getText().length() == 0) {
@@ -171,8 +172,9 @@ public class AddBookFragment extends Fragment implements LoaderManager.LoaderCal
         ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",", "\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
-            new DownloadImage((ImageView) rootView.findViewById(R.id.bookCover)).execute(imgUrl);
-            rootView.findViewById(R.id.bookCover).setVisibility(View.VISIBLE);
+            Picasso.with(getContext())
+                    .load(imgUrl)
+                    .into((ImageView) rootView.findViewById(R.id.bookCover));
         }
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
@@ -187,6 +189,20 @@ public class AddBookFragment extends Fragment implements LoaderManager.LoaderCal
 
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        activity.setTitle(R.string.scan);
+    }
+
+    // ---------------------------------
+    // PRIVATE METHODS
+    // ---------------------------------
+
+    private void restartLoader() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
     private void clearFields() {
         ((TextView) rootView.findViewById(R.id.bookTitle)).setText("");
         ((TextView) rootView.findViewById(R.id.bookSubTitle)).setText("");
@@ -195,11 +211,5 @@ public class AddBookFragment extends Fragment implements LoaderManager.LoaderCal
         rootView.findViewById(R.id.bookCover).setVisibility(View.INVISIBLE);
         rootView.findViewById(R.id.save_button).setVisibility(View.INVISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        activity.setTitle(R.string.scan);
     }
 }

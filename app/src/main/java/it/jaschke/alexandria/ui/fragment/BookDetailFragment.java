@@ -18,24 +18,42 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
-import it.jaschke.alexandria.services.DownloadImage;
 import it.jaschke.alexandria.ui.activity.MainActivity;
 
 
 public class BookDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    // ---------------------------------
+    // CONSTANTS
+    // ---------------------------------
+
     public static final String EAN_KEY = "EAN";
+
+    // ---------------------------------
+    // ATTRIBUTES
+    // ---------------------------------
+
     private final int LOADER_ID = 10;
     private View rootView;
     private String ean;
     private String bookTitle;
     private ShareActionProvider shareActionProvider;
 
+    // ---------------------------------
+    // CONSTRUCTOR
+    // ---------------------------------
+
     public BookDetailFragment() {
     }
+
+    // ---------------------------------
+    // OVERIDDENT METHODS
+    // ---------------------------------
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,8 +133,11 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
         ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",", "\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
-            new DownloadImage((ImageView) rootView.findViewById(R.id.fullBookCover)).execute(imgUrl);
+            Picasso.with(getContext())
+                    .load(imgUrl)
+                    .into((ImageView) rootView.findViewById(R.id.fullBookCover));
             rootView.findViewById(R.id.fullBookCover).setVisibility(View.VISIBLE);
+
         }
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
