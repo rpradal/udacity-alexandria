@@ -52,7 +52,7 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
     }
 
     // ---------------------------------
-    // OVERIDDENT METHODS
+    // OVERRIDDEN METHODS
     // ---------------------------------
 
     @Override
