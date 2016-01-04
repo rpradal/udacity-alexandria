@@ -12,7 +12,7 @@ import it.jaschke.alexandria.R;
 
 public class AboutFragment extends Fragment {
 
-    public AboutFragment(){
+    public AboutFragment() {
 
     }
 
