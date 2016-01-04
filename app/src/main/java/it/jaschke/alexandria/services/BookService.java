@@ -148,6 +148,8 @@ public class BookService extends IntentService {
             bookJsonString = buffer.toString();
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error ", e);
+            sendMessageBroadcast(getResources().getString(R.string.check_internet_connection));
+            return;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -180,9 +182,7 @@ public class BookService extends IntentService {
             if (bookJson.has(ITEMS)) {
                 bookArray = bookJson.getJSONArray(ITEMS);
             } else {
-                Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
-                messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources().getString(R.string.not_found));
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+                sendMessageBroadcast(getResources().getString(R.string.not_found));
                 return;
             }
 
@@ -247,5 +247,11 @@ public class BookService extends IntentService {
             getContentResolver().insert(AlexandriaContract.CategoryEntry.CONTENT_URI, values);
             values = new ContentValues();
         }
+    }
+
+    private void sendMessageBroadcast(String message) {
+        Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+        messageIntent.putExtra(MainActivity.MESSAGE_KEY, message);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
     }
 }

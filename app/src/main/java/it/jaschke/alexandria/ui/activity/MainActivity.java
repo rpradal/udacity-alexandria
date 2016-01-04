@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +23,7 @@ import it.jaschke.alexandria.ui.fragment.AddBookFragment;
 import it.jaschke.alexandria.ui.fragment.BookDetailFragment;
 import it.jaschke.alexandria.ui.fragment.ListOfBooksFragment;
 import it.jaschke.alexandria.ui.fragment.NavigationDrawerFragment;
+import it.jaschke.alexandria.utils.Utility;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence title;
-    public static boolean IS_TABLET = false;
     private BroadcastReceiver messageReciever;
 
     // ---------------------------------
@@ -58,8 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IS_TABLET = isTablet();
-        if (IS_TABLET) {
+        if (Utility.isTablet(this)) {
             setContentView(R.layout.activity_main_tablet);
         } else {
             setContentView(R.layout.activity_main);
@@ -189,16 +187,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     public void goBack(View view) {
         getSupportFragmentManager().popBackStack();
-    }
-
-    // ---------------------------------
-    // PRIVATE METHODS
-    // ---------------------------------
-
-    private boolean isTablet() {
-        return (getApplicationContext().getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     // ---------------------------------
