@@ -92,6 +92,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 .commit();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String ean = data.getStringExtra("EAN");
+        ((AddBookFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.container)).setScannedEan(ean);
+    }
+
     public void setTitle(int titleId) {
         title = getString(titleId);
     }
