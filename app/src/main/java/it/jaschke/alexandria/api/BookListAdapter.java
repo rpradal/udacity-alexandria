@@ -45,7 +45,7 @@ public class BookListAdapter extends CursorAdapter {
     }
 
     // ---------------------------------
-    // OVERIDDEN METHODS
+    // OVERRIDDEN METHODS
     // ---------------------------------
 
     @Override

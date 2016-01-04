@@ -31,6 +31,10 @@ import it.jaschke.alexandria.ui.activity.MainActivity;
  */
 public class BookService extends IntentService {
 
+    // ---------------------------------
+    // CONSTANTS
+    // ---------------------------------
+
     private final String LOG_TAG = BookService.class.getSimpleName();
 
     public static final String FETCH_BOOK = "it.jaschke.alexandria.services.action.FETCH_BOOK";
@@ -38,9 +42,17 @@ public class BookService extends IntentService {
 
     public static final String EAN = "it.jaschke.alexandria.services.extra.EAN";
 
+    // ---------------------------------
+    // CONSTRUCTOR
+    // ---------------------------------
+
     public BookService() {
         super("Alexandria");
     }
+
+    // ---------------------------------
+    // OVERRIDDEN METHODS
+    // ---------------------------------
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -55,6 +67,10 @@ public class BookService extends IntentService {
             }
         }
     }
+
+    // ---------------------------------
+    // PRIVATE METHODS
+    // ---------------------------------
 
     /**
      * Handle action Foo in the provided background thread with the provided
@@ -84,12 +100,14 @@ public class BookService extends IntentService {
                 null  // sort order
         );
 
-        if (bookEntry.getCount() > 0) {
-            bookEntry.close();
-            return;
-        }
+        if (bookEntry != null) {
+            if (bookEntry.getCount() > 0) {
+                bookEntry.close();
+                return;
+            }
 
-        bookEntry.close();
+            bookEntry.close();
+        }
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
