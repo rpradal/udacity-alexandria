@@ -23,7 +23,7 @@ import com.squareup.picasso.Picasso;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
-import it.jaschke.alexandria.ui.activity.MainActivity;
+import it.jaschke.alexandria.utils.Utility;
 
 
 public class BookDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -157,7 +157,7 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onPause() {
         super.onDestroyView();
-        if (MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container) == null) {
+        if (Utility.isTablet(getActivity()) && rootView.findViewById(R.id.right_container) == null) {
             getActivity().getSupportFragmentManager().popBackStack();
         }
     }

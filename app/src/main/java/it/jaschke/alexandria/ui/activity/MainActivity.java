@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,18 +26,7 @@ import it.jaschke.alexandria.ui.fragment.NavigationDrawerFragment;
 import it.jaschke.alexandria.utils.Utility;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
-
-    // ---------------------------------
-    // CONSTANTS
-    // ---------------------------------
-
-    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
-    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
-
-    // ---------------------------------
-    // ATTRIBUTES
-    // ---------------------------------
+public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -50,9 +39,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     private CharSequence title;
     private BroadcastReceiver messageReciever;
 
-    // ---------------------------------
-    // LIFECYCLE
-    // ---------------------------------
+    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
+    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +98,27 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 .findFragmentById(R.id.container)).setScannedEan(ean);
     }
 
+    public void setTitle(int titleId) {
+        title = getString(titleId);
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(title);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() < 2) {
+            finish();
+        }
+        super.onBackPressed();
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!navigationDrawerFragment.isDrawerOpen()) {
@@ -161,28 +170,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 .addToBackStack("Book Detail")
                 .commit();
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() < 2) {
-            finish();
-        }
-        super.onBackPressed();
-    }
-
-    // ---------------------------------
-    // PUBLIC METHODS
-    // ---------------------------------
-
-    public void setTitle(int titleId) {
-        title = getString(titleId);
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(title);
     }
 
     public void goBack(View view) {
